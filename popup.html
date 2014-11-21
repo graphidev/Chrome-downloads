@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		
+		<meta charset=utf-8 />
+		<title>Téléchargements</title>
+		
+		<link rel="stylesheet" href="style.css">
+		
+		<style>
+			
+		</style>
+		
+		<script src="head.js"></script>
+		
+	</head>
+	
+	<body>
+
+		<h1 id="title">Téléchargements</h1>
+
+		<button id="options">Options</button>
+		<button id="clean">Tout effacer</button>
+		
+		<div class="options-list">
+			
+			<ul>
+				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_maxItemsView">Taille de la liste</label>
+						<p>Nombre maxiumum de téléchargements à afficher dans la liste.</p>
+					</div>
+					
+					<div class="option-value">
+						<select name="maxItemsView" id="opt_maxItemsView">
+							<option value="0">Illimité</option>
+							<option value="5">5</option>
+							<option value="10">10</option>
+							<option value="15">15</option>
+							<option value="20">20</option>
+							<option value="1000">1000</option>
+						</select>
+					</div>
+				
+				</li>
+				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_enableNotificationOnComplete">Prévénir de la fin des téléchargments</label>
+						<p>Affichera une notification pour prévenir la fin du téléchargement si cette fenêtre est fermée.</p>
+					</div>
+					
+					<div class="option-value">
+						<input type="checkbox" name="enableNotificationOnComplete" id="opt_enableNotificationOnComplete">
+					</div>
+				
+				</li>
+				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_disableDefaultView">Désactiver le téléchargement par défaut</label>
+						<p>N'affichera plus la liste des téléchargements en cours en bas de la fenêtre.</p>
+					</div>
+					
+					<div class="option-value">
+						<input type="checkbox" name="disableDefaultView" id="opt_disableDefaultView">
+					</div>
+				
+				</li>
+				
+			</ul>
+			
+		</div>
+		
+		<input type="search" placeholder="Rechercher dans les téléchargements ..." name="search" class="downloads-search" />
+		
+		<div class="downloads-list">
+			
+			<p class="empty-list">
+				:-)
+			</p>
+			
+			<div class="download-model">
+				
+				<div class="download-preview">
+					<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="download-icon">
+				</div>
+
+				<div class="download-informations">
+
+					<div class="download-meta">
+						<span class="download-name"></span>
+						<span class="download-url"></span>
+					</div>
+
+					<div class="download-progressbar">
+						<div class="download-progress"></div>
+					</div>
+
+					<div class="download-state">
+						<p class="download-actions"></p>
+						<p class="download-status"></p>
+					</div>
+
+				</div>
+			</div>
+			
+		</div>
+
+		<a id="show-all" href="chrome://downloads" draggable="false">Voir tous les téléchargements</a>
+
+		<script src="popup.js"></script>
+		
+	</body>
+	
+</html>
