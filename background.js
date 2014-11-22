@@ -13,7 +13,7 @@ var options = {
 	hideInterrupted: 				false,
 	maxItemsView: 					15,
 	disableDefaultView: 			true,
-	removeAction: 					'erase',
+	removeDownloadAction: 			'erase',
 	cleanOnlyVisibleDownloads:		false,
 	eraseDeletedFiles:				true,
 };

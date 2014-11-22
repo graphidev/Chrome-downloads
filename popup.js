@@ -202,7 +202,7 @@ function updateItemView(view, item) {
 			view.classList.add('download-'+item.state);
 			var size = byte_format(item.bytesReceived);
 			view.querySelector('.download-status').innerHTML = size;
-			actions.push('show', (item.exists ? bg.options.removeAction : 'erase'));
+			actions.push('show', (item.exists ? bg.options.removeDownloadAction : 'erase'));
 		}
 			
 	}

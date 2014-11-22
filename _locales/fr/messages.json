@@ -94,6 +94,65 @@
 	"action_delete": {
 		"message": "Supprimer",
 		"description": "Delete the download from the list and the file"
+	},
+	
+	/* Options translations */
+	
+	// Liste size
+	"option_listSizeLabel": {
+		"message": "Taille de la liste"
+	},
+	"option_listSizeLegend": {
+		"message": "Nombre maxiumum de téléchargements à afficher dans la liste."
+	},
+	"option_listSizeUnlimited": {
+		"message": "Illimité"
+	},
+	
+	// Clean Only visible downloads
+	"option_cleanOnlyVisibleDownloadsLabel": {
+		"message": "Effacer seulement les téléchargements visibles"
+	},
+	"option_cleanOnlyVisibleDownloadsLegend": {
+		"message": "Efface seulement les téléchargements visibles dans la liste lors de l'effacement de la liste"
+	},
+	
+	// Enable notifications on complete
+	"option_enableNotificationOnCompleteLabel": {
+		"message": "Effacer seulement les téléchargements visibles"
+	},
+	"option_enableNotificationOnCompleteLEgend": {
+		"message": "Afficher une notification pour prévenir la fin du téléchargement si cette fenêtre est fermée."
+	},
+	
+	// Disable default view
+	"option_disableDefaultViewLabel": {
+		"message": "Désactiver la vue par défaut"
+	},
+	"option_disableDefaultViewLEgend": {
+		"message": "N'affichera plus la liste des téléchargements en cours en bas de la fenêtre."
+	},
+	
+	// Remove download action
+	"option_removeDownloadActionLabel": {
+		"message": "Suppression d'un téléchargement"
+	},
+	"option_removeDownloadActionLegend": {
+		"message": "Action a effectuer lors du retrait d'un téléchargement."
+	},
+	"option_removeDownloadActionErase": {
+		"message": "Retirer de la liste"
+	},
+	"option_removeDownloadActionDelete": {
+		"message": "Supprimer le fichier"
+	},
+	
+	// Erase deleted files
+	"option_eraseDeletedFilesLabel": {
+		"message": "Retirer les fichiers supprimés"
+	},
+	"option_eraseDeletedFilesLegend": {
+		"message": "Effacer les fichiers supprimés de la liste des téléchargements."
 	}
 
 }

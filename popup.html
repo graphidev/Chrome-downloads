@@ -68,13 +68,13 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_maxItemsView">Taille de la liste</label>
-						<p>Nombre maxiumum de téléchargements à afficher dans la liste.</p>
+						<label for="opt_maxItemsView" i18n-name="option_listSizeLabel"></label>
+						<p i18n-name="option_listSizeLegend"></p>
 					</div>
 					
 					<div class="option-value">
 						<select name="maxItemsView" id="opt_maxItemsView">
-							<option value="0">Illimité</option>
+							<option value="0" i18n-name="option_listSizeUnlimited" i18n-method="text"></option>
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="15">15</option>
@@ -88,8 +88,8 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_cleanOnlyVisibleDownloads">Effacer seulement les téléchargements visibles</label>
-						<p>Efface seulement les téléchargements visibles dans la liste lors de l'effacement de la liste</p>
+						<label for="opt_cleanOnlyVisibleDownloads" i18n-name="option_cleanOnlyVisibleDownloadsLabel"></label>
+						<p i18n-name="option_cleanOnlyVisibleDownloadsLegend"></p>
 					</div>
 					
 					<div class="option-value">
@@ -101,8 +101,8 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_enableNotificationOnComplete">Prévénir de la fin des téléchargements</label>
-						<p>Affichera une notification pour prévenir la fin du téléchargement si cette fenêtre est fermée.</p>
+						<label for="opt_enableNotificationOnComplete" i18n-name="option_enableNotificationOnCompleteLabel"></label>
+						<p i18n-name="option_enableNotificationOnCompleteLegend"></p>
 					</div>
 					
 					<div class="option-value">
@@ -114,8 +114,8 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_disableDefaultView">Désactiver le téléchargement par défaut</label>
-						<p>N'affichera plus la liste des téléchargements en cours en bas de la fenêtre.</p>
+						<label for="opt_disableDefaultView" i18n-name="option_disableDefaultViewLabel"></label>
+						<p i18n-name="option_disableDefaultViewLegend"></p>
 					</div>
 					
 					<div class="option-value">
@@ -127,14 +127,14 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_removeAction">Suppression d'un téléchargement</label>
-						<p>Action a effectuer lors du retrait d'un téléchargement</p>
+						<label for="opt_removeDownloadAction" i18n-name="option_removeDownloadActionLabel"></label>
+						<p i18n-name="option_removeDownloadActionLegend"></p>
 					</div>
 					
 					<div class="option-value">
-						<select name="removeAction" id="opt_removeAction">
-							<option value="erase">Retirer de la liste</option>
-							<option value="delete">Supprimer le fichier</option>
+						<select name="removeDownloadAction" id="opt_removeDownloadAction">
+							<option value="erase" i18n-name="option_removeDownloadActionErase" i18n-method="text"></option>
+							<option value="delete" i18n-name="option_removeDownloadActionDelete" i18n-method="text"></option>
 						</select>
 					</div>
 				
@@ -143,8 +143,8 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_eraseDeletedFiles">Retirer les fichiers supprimés</label>
-						<p>Effacer les fichiers supprimés de la liste des téléchargements</p>
+						<label for="opt_eraseDeletedFiles" i18n-name="option_eraseDeletedFilesLabel"></label>
+						<p i18n-name="option_eraseDeletedFilesLegend"></p>
 					</div>
 					
 					<div class="option-value">
