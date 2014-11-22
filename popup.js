@@ -4,6 +4,7 @@
 var itemsTimers = [];
 var timers = [];
 var bg = chrome.extension.getBackgroundPage();
+var search = null;
 getDownloads();
 
 /**
@@ -62,7 +63,7 @@ function getDownloads() {
 	chrome.downloads.search({ limit:0 }, function () {
 		chrome.downloads.search({ 
 				limit: parseInt(bg.options.maxItemsView), 
-				filenameRegex: '.+', 
+				filenameRegex: (search ? search : '.+'), 
 				orderBy: ['startTime'] 
 			}, 
 			function(items) {
@@ -123,9 +124,11 @@ function updateItemView(view, item) {
 	
 	var actions = [];
 	
-	view.querySelector('.download-name').innerHTML = bg.filename(item.filename);
+	var filename = bg.filename(item.filename);
+	var regexp = new RegExp(search,"gi");
+	
+	view.querySelector('.download-name').innerHTML = filename.replace(regexp, '<strong>$&</strong>');
 	view.querySelector('.download-status').innerHTML = E_STATUS[item.state];
-	//view.querySelector('.download-url').innerHTML = ' - '+item.url;
 	
 	chrome.downloads.getFileIcon(item.id, {}, function (src) {
 		if (src) view.querySelector('.download-icon').src = src;
@@ -243,6 +246,24 @@ document.querySelector('#clean').addEventListener('click', function(e) {
 });
 
 /**
+ * On search
+**/
+searchfield = document.querySelector('.downloads-search');
+searchfield.addEventListener('input', function(e) {
+
+	search = searchfield.value;
+
+	var downloads = document.querySelectorAll('.download');	
+	for(i in downloads) {
+
+		if(downloads[i] instanceof HTMLElement)
+			downloads[i].parentNode.removeChild(downloads[i]);
+	}
+	getDownloads();
+
+});
+
+/**
  * Show/hide options parameters
 **/
 document.querySelector('#options').addEventListener('click', function(e) {
@@ -264,13 +285,13 @@ document.querySelector('#options').addEventListener('click', function(e) {
 	if(!optionsList.style.display || optionsList.style.display == 'none') {
 		optionsList.style.display = 'block';
 		downloadsList.style.display = 'none';
-		//searchfield.style.display = 'none';
+		searchfield.style.display = 'none';
 		cleanButton.style.display = 'none'
 	}
 	else {
 		optionsList.style.display = 'none';
 		downloadsList.style.display = 'block';
-		//searchfield.style.display = 'block';
+		searchfield.style.display = 'block';
 		cleanButton.style.display = 'block'
 	}
 		
@@ -288,7 +309,7 @@ document.getElementById("show-all").onclick = function (e) {
 **/
 window.addEventListener("DOMContentLoaded", function () {
 	chrome.runtime.sendMessage("popup:open");
-
+	
 	// Items interactions
 	var downloadsList = document.querySelector('.downloads-list');
 	downloadsList.addEventListener('click', function(e) {

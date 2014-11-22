@@ -97,7 +97,6 @@ a {
  * Downloads search field	
 **/
 .downloads-search {
-	display: none;
 	box-sizing: border-box;
 	width: 100%;
 	padding: 10px;
