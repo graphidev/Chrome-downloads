@@ -114,15 +114,28 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_deleteAction">Suppression d'un téléchargement</label>
+						<label for="opt_removeAction">Suppression d'un téléchargement</label>
 						<p>Action a effectuer lors du retrait d'un téléchargement</p>
 					</div>
 					
 					<div class="option-value">
-						<select name="deleteAction" id="opt_deleteAction">
+						<select name="removeAction" id="opt_removeAction">
 							<option value="erase">Retirer de la liste</option>
 							<option value="delete">Supprimer le fichier</option>
 						</select>
+					</div>
+				
+				</li>
+				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_cleanOnlyVisibleDownloads">Effacer seulement les téléchargements visibles</label>
+						<p>Efface seulement les téléchargements visibles dans la liste lors de l'effacement de la liste</p>
+					</div>
+					
+					<div class="option-value">
+						<input type="checkbox" name="cleanOnlyVisibleDownloads" id="opt_cleanOnlyVisibleDownloads">
 					</div>
 				
 				</li>

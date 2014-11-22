@@ -201,7 +201,7 @@ function updateItemView(view, item) {
 			view.classList.add('download-'+item.state);
 			var size = byte_format(item.bytesReceived);
 			view.querySelector('.download-status').innerHTML = size;
-			actions.push('show', bg.options.deleteAction);
+			actions.push('show', bg.options.removeAction);
 		}
 			
 	}
@@ -239,11 +239,16 @@ chrome.downloads.onChanged.addListener(function(e) {
 document.querySelector('#clean').addEventListener('click', function(e) {
 	chrome.downloads.search({}, function (results) {		
 		var running = results.map(function (item) {
-			// collect downloads in progress
-			if (item.state == 'in_progress') 
+			// Do not remove downloads in progress
+			if(item.state == 'in_progress') 
 				return true;
 			
-			chrome.downloads.erase({ id: item.id });
+			if(bg.options.cleanOnlyVisibleDownloads && !document.querySelector('.download[data-item="'+item.id+'"]')) {
+				return true;	
+			}
+			else {
+				chrome.downloads.erase({ id: item.id });
+			}
 		});
 		
 		if(running.length)

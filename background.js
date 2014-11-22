@@ -13,7 +13,8 @@ var options = {
 	hideInterrupted: 				false,
 	maxItemsView: 					15,
 	disableDefaultView: 			true,
-	deleteAction: 					'erase'
+	removeAction: 					'erase',
+	cleanOnlyVisibleDownloads:		false
 };
 
 options = getOptions(options);
