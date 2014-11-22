@@ -14,7 +14,8 @@ var options = {
 	maxItemsView: 					15,
 	disableDefaultView: 			true,
 	removeAction: 					'erase',
-	cleanOnlyVisibleDownloads:		false
+	cleanOnlyVisibleDownloads:		false,
+	eraseDeletedFiles:				true,
 };
 
 options = getOptions(options);
@@ -155,6 +156,12 @@ chrome.downloads.onChanged.addListener(function(delta) {
 				});	
 			}
 		}
+		
+	}
+	
+	// Erase deleted files
+	else if(delta.exists && options.eraseDeletedFiles && !delta.exists.current && delta.exists.previous) {
+		chrome.downloads.erase({id:delta.id});
 	}
 	
 	 // On pause : update icon

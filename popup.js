@@ -108,20 +108,21 @@ function getDownloads() {
 function actualizeItem(id) {
 	chrome.downloads.search({limit:0}, function() {
 		chrome.downloads.search({id:id}, function(item) {
+			if(item.length) {;
 			
-			if(!item.length) return;
-			
-			item = item[0];
+				item = item[0];
 
-			if(!itemsTimers[item.id]) itemsTimers[item.id] = setInterval(function() {
-				actualizeItem(item.id);
-			}, 500);
+				if(!itemsTimers[item.id]) itemsTimers[item.id] = setInterval(function() {
+					actualizeItem(item.id);
+				}, 500);
 
-			var download = document.querySelector('.downloads-list .download[data-item="'+item.id+'"]');
-			if(download) updateItemView(download, item);
+				var download = document.querySelector('.downloads-list .download[data-item="'+item.id+'"]');
+				if(download) updateItemView(download, item);
 
-			if(item.state != 'in_progress'/*|| (item.paused /*&& item.bytesReceived == itemsTimers[item.id])*/)
-				clearInterval(itemsTimers[item.id]);
+				if(item.state != 'in_progress'/*|| (item.paused /*&& item.bytesReceived == itemsTimers[item.id])*/)
+					clearInterval(itemsTimers[item.id]);
+							 
+			}
 		});
 	});
 }
@@ -201,7 +202,7 @@ function updateItemView(view, item) {
 			view.classList.add('download-'+item.state);
 			var size = byte_format(item.bytesReceived);
 			view.querySelector('.download-status').innerHTML = size;
-			actions.push('show', bg.options.removeAction);
+			actions.push('show', (item.exists ? bg.options.removeAction : 'erase'));
 		}
 			
 	}
