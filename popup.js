@@ -7,27 +7,31 @@ var bg = chrome.extension.getBackgroundPage();
 var search = null;
 getDownloads();
 
-/**
- * Languages definition
-**/
-var E_STATUS = { 
-		complete: 		'Terminé',
-		in_progress: 	'En cours &hellip;',
-		interrupted: 	'Interrompu',
-		paused:			'En pause',
-		fail:			'Échec',
-		deleted:		'Supprimé'
-	};
+var i18n = document.querySelectorAll('[i18n-name]');
 
-var E_ACTIONS = {
-		retry:			'Réessayer',
-		download:		'Télécharger à nouveau',
-		show:			'Localiser',
-		erase:			'Retirer',
-		pause:			'Mettre en pause',
-		resume:			'Reprendre',
-		cancel:			'Annuler'
-	};
+for(i in i18n) {
+	if(i18n[i] instanceof HTMLElement) {
+		
+		var name = i18n[i].getAttribute('i18n-name');
+		
+		if(i18n[i].hasAttribute('i18n-method'))
+			var attribute = i18n[i].getAttribute('i18n-method')
+		else
+			var attribute = 'innerHTML';
+		
+		if(i18n[i].hasAttribute('i18n-placeholders')) {
+			
+			placeholders = i18n[i].getAttribute('i18n-placeholders');
+			i18n[i][attribute] = chrome.i18n.getMessage(name, placeholders);
+			
+		}
+		
+		else {
+			i18n[i][attribute] = chrome.i18n.getMessage(name);
+		}
+	}
+}
+
 
 /**
  * Utils functions
@@ -104,7 +108,9 @@ function getDownloads() {
 function actualizeItem(id) {
 	chrome.downloads.search({limit:0}, function() {
 		chrome.downloads.search({id:id}, function(item) {
-
+			
+			if(!item.length) return;
+			
 			item = item[0];
 
 			if(!itemsTimers[item.id]) itemsTimers[item.id] = setInterval(function() {
@@ -128,7 +134,7 @@ function updateItemView(view, item) {
 	var regexp = new RegExp(search,"gi");
 	
 	view.querySelector('.download-name').innerHTML = filename.replace(regexp, '<strong>$&</strong>');
-	view.querySelector('.download-status').innerHTML = E_STATUS[item.state];
+	view.querySelector('.download-status').innerHTML = chrome.i18n.getMessage('status_'+item.state);
 	
 	chrome.downloads.getFileIcon(item.id, {}, function (src) {
 		if (src) view.querySelector('.download-icon').src = src;
@@ -139,7 +145,7 @@ function updateItemView(view, item) {
 	
 	if(!item.exists) {
 		view.classList.add('download-deleted');
-		view.querySelector('.download-status').innerHTML = E_STATUS['deleted']
+		view.querySelector('.download-status').innerHTML = chrome.i18n.getMessage('status_deleted')
 		actions.push('download', 'erase');
 	}
 	
@@ -149,7 +155,7 @@ function updateItemView(view, item) {
 		
 		if(item.paused) {
 			view.classList.add('download-paused');
-			view.querySelector('.download-status').innerHTML = status + ' - <span>'+E_STATUS['paused']+'</span>';
+			view.querySelector('.download-status').innerHTML = status + ' - <span>'+chrome.i18n.getMessage('status_paused')+'</span>';
 			if(item.canResume) actions.push('resume','cancel');
 		}
 		else {
@@ -187,7 +193,7 @@ function updateItemView(view, item) {
 		// Interrupted download or incomplete one
 		if(item.state == 'interrupted' || (item.state == 'complete' && item.bytesReceived < item.fileSize)) {
 			view.classList.add('download-interrupted');
-			view.querySelector('.download-status').innerHTML = E_STATUS['interrupted'];
+			view.querySelector('.download-status').innerHTML = chrome.i18n.getMessage('status_interrupted');
 			actions.push('retry', 'erase');
 		}
 		
@@ -195,14 +201,14 @@ function updateItemView(view, item) {
 			view.classList.add('download-'+item.state);
 			var size = byte_format(item.bytesReceived);
 			view.querySelector('.download-status').innerHTML = size;
-			actions.push('show', 'erase');
+			actions.push('show', bg.options.deleteAction);
 		}
 			
 	}
 	
 	var buttons = '';
 	actions.forEach(function(action) {
-		buttons += '<a href="#" data-action="'+action+'">'+E_ACTIONS[action]+'</a>';	
+		buttons += '<a href="#" data-action="'+action+'">'+chrome.i18n.getMessage('action_'+action)+'</a>';	
 	});
 	view.querySelector('.download-actions').innerHTML = buttons;
 	
@@ -223,7 +229,8 @@ chrome.downloads.onErased.addListener(function(id) {
  * On upload updated
 **/
 chrome.downloads.onChanged.addListener(function(e) {
-	actualizeItem(e.id);
+	if(e.exists)
+		actualizeItem(e.id);
 });
 
 /**
@@ -322,7 +329,7 @@ window.addEventListener("DOMContentLoaded", function () {
 			if(e.target.hasAttribute('data-action')) {
 				var action = e.target.getAttribute('data-action');
 				
-				if(/resume|cancel|pause|retry|download|erase|show/.test(action)) {
+				if(/resume|cancel|pause|retry|download|erase|delete|show/.test(action)) {
 					
 					if(action == 'download' || action == 'retry') { // Restart download
 						chrome.downloads.search({id:id}, function(item) {
@@ -335,6 +342,12 @@ window.addEventListener("DOMContentLoaded", function () {
 							chrome.downloads.download({url:item.url});
 							chrome.downloads.erase({id:item.id});
 					  	});
+					}
+					
+					else if(action == 'delete') {
+						chrome.downloads.removeFile(id, function() {
+							chrome.downloads.erase({id:id});
+						});
 					}
 					
 					else if(action == 'erase') { // erase item
@@ -385,7 +398,6 @@ window.addEventListener("DOMContentLoaded", function () {
 					var value = field.checked;
 				}
 				else {
-					bg.console.log(field.value);
 					var value = field.value;
 				}
 				

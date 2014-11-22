@@ -12,7 +12,8 @@ var options = {
 	enableNotificationOnComplete: 	true,
 	hideInterrupted: 				false,
 	maxItemsView: 					15,
-	disableDefaultView: 			true
+	disableDefaultView: 			true,
+	deleteAction: 					'erase'
 };
 
 options = getOptions(options);

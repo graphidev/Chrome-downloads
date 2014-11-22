@@ -35,7 +35,6 @@ function getOptions(options) {
 /**
  * i18n
 **/
-function i18nhtml(){
-	var message = chrome.i18n.getMessage("click_here", ["string1", "string2"]);
-	document.write(message)
+function i18n(item, placeholders){
+	return chrome.i18n.getMessage(item, placeholders);
 }

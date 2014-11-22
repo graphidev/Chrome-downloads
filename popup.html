@@ -4,7 +4,7 @@
 	<head>
 		
 		<meta charset=utf-8 />
-		<title>Téléchargements</title>
+		<title i18n-name="appName"></title>
 		
 		<link rel="stylesheet" href="style.css">
 		
@@ -18,10 +18,48 @@
 	
 	<body>
 
-		<h1 id="title">Téléchargements</h1>
+		<!--<h1 id="title" i18n-name="appName"></h1>-->
+		<h1 id="title" i18n-name="appName"></h1>
 
-		<button id="options">Options</button>
-		<button id="clean">Tout effacer</button>
+		<button id="options" i18n-name="optionsButtonName"></button>
+		<button id="clean" i18n-name="cleanButtonName"></button>
+		
+		
+		<input type="search" i18n-name="searchFieldLegend" i18n-method="placeholder" name="search" class="downloads-search"  autofocus="autofocus">
+		
+		<div class="downloads-list">
+			
+			<p class="empty-list">
+				:-)
+			</p>
+			
+			<div class="download-model">
+				
+				<div class="download-preview">
+					<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="download-icon">
+				</div>
+
+				<div class="download-informations">
+
+					<div class="download-meta">
+						<span class="download-name"></span>
+						<span class="download-url"></span>
+					</div>
+
+					<div class="download-progressbar">
+						<div class="download-progress"></div>
+					</div>
+
+					<div class="download-state">
+						<p class="download-actions"></p>
+						<p class="download-status"></p>
+					</div>
+
+				</div>
+			</div>
+			
+		</div>
+				
 		
 		<div class="options-list">
 			
@@ -73,46 +111,27 @@
 				
 				</li>
 				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_deleteAction">Suppression d'un téléchargement</label>
+						<p>Action a effectuer lors du retrait d'un téléchargement</p>
+					</div>
+					
+					<div class="option-value">
+						<select name="deleteAction" id="opt_deleteAction">
+							<option value="erase">Retirer de la liste</option>
+							<option value="delete">Supprimer le fichier</option>
+						</select>
+					</div>
+				
+				</li>
+				
 			</ul>
 			
 		</div>
-		
-		<input type="search" placeholder="Rechercher dans les téléchargements ..." name="search" class="downloads-search"  autofocus="autofocus">
-		
-		<div class="downloads-list">
-			
-			<p class="empty-list">
-				:-)
-			</p>
-			
-			<div class="download-model">
-				
-				<div class="download-preview">
-					<img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" class="download-icon">
-				</div>
 
-				<div class="download-informations">
-
-					<div class="download-meta">
-						<span class="download-name"></span>
-						<span class="download-url"></span>
-					</div>
-
-					<div class="download-progressbar">
-						<div class="download-progress"></div>
-					</div>
-
-					<div class="download-state">
-						<p class="download-actions"></p>
-						<p class="download-status"></p>
-					</div>
-
-				</div>
-			</div>
-			
-		</div>
-
-		<a id="show-all" href="chrome://downloads" draggable="false">Voir tous les téléchargements</a>
+		<a id="show-all" href="chrome://downloads" i18n-name="defaultViewButton" draggable="false"></a>
 
 		<script src="popup.js"></script>
 		

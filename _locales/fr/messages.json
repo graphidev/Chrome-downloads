@@ -1,0 +1,99 @@
+{
+	
+	"testitem": {
+		"message": "this is a testing translation"
+	},
+	
+	/* Globals of the extension */
+	"appName": {
+		"message": "Téléchargements",
+		"description": "Extension name"
+	},
+	"appDescription": {
+		"message": "Gérer vos téléchargements directement depuis n'importe quelle fenêtre sans accéder à la page dédiée de Chrome.",
+		"description": "Extension description"
+	},
+	
+	
+	/* Popup interface translations */
+	"optionsButtonName": {
+		"message": "Options",
+		"description": "Name of the options button"
+	},
+	"cleanButtonName": {
+		"message": "Effacer la liste",
+		"description": "Name of the clean button"
+	},
+	
+	"searchFieldLegend": {
+		"message": "Rechercher dans les téléchargements ...",
+		"description": "Search field placeholder's value"
+	},
+	"DefaultViewButton": {
+		"message": "Voir tous les téléchargements",
+		"description": "Name of the view all items button"
+	},
+	
+	
+	/* Downloads status translation */
+	"status_complete": {
+		"message": "Terminé",
+		"description": "Download complete"
+	},
+	"status_in_progress": {
+		"message": "En cours",
+		"description": "Download in progress"
+	},
+	"status_paused": {
+		"message": "En pause",
+		"description": "Download paused"
+	},
+	"status_interrupted": {
+		"message": "Interrompu",
+		"description": "Download interrupted"
+	},
+	"status_deleted": {
+		"message": "Supprimé",
+		"description": "Download file deleted"
+	},
+	
+	
+	/* Downloads actions translations */
+	"action_download": {
+		"message": "Télécharger à nouveau",
+		"description": "Download again the deleted file"
+	},
+	"action_retry": {
+		"message": "Réessayer",
+		"description": "Retry to download"
+	},
+	"action_pause": {
+		"message": "Mettre en pause",
+		"description": "Stop the download for now"
+	},
+	"action_resume": {
+		"message": "Reprendre",
+		"description": "Continue the file downloading"
+	},
+	"action_resume": {
+		"message": "Reprendre",
+		"description": "Continue the file downloading"
+	},
+	"action_show": {
+		"message": "Montrer le fichier",
+		"description": "Show where the downloaded file is"
+	},
+	"action_cancel": {
+		"message": "Annuler",
+		"description": "Cancel the download"
+	},
+	"action_erase": {
+		"message": "Retirer",
+		"description": "Delete the download from the list"
+	},
+	"action_delete": {
+		"message": "Supprimer",
+		"description": "Delete the download from the list and the file"
+	}
+
+}
