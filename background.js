@@ -2,20 +2,19 @@
 var NOTIFICATIONS_ID = 'dl';
 var ICON_DEFAULT_COLOR = "#5e5e5e";
 var ICON_DISABLED_COLOR = "#aaa";
+var ICON_HIGHLIGHT_COLOR = "red";
 var ICON_PROGRESS_BACKGROUND_COLOR = "#c0c0c0";
 var ICON_PROGRESS_DEFAULT_COLOR = "#2566ff";
 var ICON_PROGRESS_PAUSED_COLOR = "#cba303";
 
-
 // Settings définition
 var options = {
-	enableNotificationOnComplete: 	true,
-	hideInterrupted: 				false,
+	enableNotifications: 			true,
 	maxItemsView: 					15,
 	disableDefaultView: 			true,
 	removeDownloadAction: 			'erase',
 	cleanOnlyVisibleDownloads:		false,
-	eraseDeletedFiles:				true,
+	standaloneFileManagement:		true,
 };
 
 options = getOptions(options);
@@ -44,54 +43,58 @@ setDefaultIcon();
 // Run once
 update();
 
-
-/**
- * New upload added
-**/
-chrome.downloads.onCreated.addListener(update);
-
 /**
  * Update icon state
 **/
 function update() {
-	chrome.downloads.search({ 
-		
-		state: 'in_progress'/*, 
-		paused: false*/
-		
-	}, function(items) {
-		
-		if (!items.length) {
-			
-			clearInterval(updating);
-			updating = null;
-			setDefaultIcon();
-			return;
-			
-		}
+	chrome.downloads.search({limit:0}, function() {
+		chrome.downloads.search({ 
+			limit: 0
+		}, function(items) {
 
-		if (!updating) 
-			updating = setInterval(update, 500);
+			if (!items.length) {
 
-		var total = 0;
-		var current = 0;
-		var paused = null;
-		var running = false;
-		
-		items.forEach(function (e) {
+				clearInterval(updating);
+				updating = null;
+				setDefaultIcon();
+				return;
+
+			}
+
+			if (!updating) 
+				updating = setInterval(update, 500);
+
+			var total = 0;
+			var current = 0;
+			var paused = null;
+			var running = false;
+			var warning = false;
 			
-			current += e.bytesReceived;
-			total += e.totalBytes;
+			items.forEach(function (e) {
+				
+				if(e.danger != 'safe' && e.danger != 'accepted'/*!'/safe|accepted/'.test(e.danger)*/) { 
+					warning = true;	
+				}
+				
+				else if(e.state == 'in_progress') {
+					current += e.bytesReceived;
+					total += e.totalBytes;
+
+					if(!e.paused) running = true;
+					if(!running && e.paused && e.canResume) paused = true;
+					else paused = false;
+				}
+				
+			});
+						
+			var progress = current / total;
 			
-			if(!e.paused) running = true;
-			if(!running && e.paused && e.canResume) paused = true;
-			else paused = false;
+			if(progress)
+				setProgressIcon(progress, paused, warning);
+			else
+				setDefaultIcon(warning);
+			
 		});
-		
-		var progress = current / total;
-
-		setProgressIcon(progress, paused)
-		
 	});
 }
 
@@ -116,51 +119,89 @@ chrome.runtime.onMessage.addListener(function (message) {
 
 
 /**
+ * New upload added
+**/
+chrome.downloads.onCreated.addListener(update);
+chrome.downloads.onErased.addListener(update);
+
+/**
  * On state change
 **/
 chrome.downloads.onChanged.addListener(function(delta) {
-	if(delta.state) {
 		
+	
+	if(delta.danger) {
+		
+		if(delta.danger.current != 'safe' && delta.danger.previous == 'safe') {
+		
+			if(options.enableNotifications && !isPopupOpen) {
+				chrome.downloads.getFileIcon(delta.id, {}, function(src) {
+					chrome.notifications.create(NOTIFICATIONS_ID+delta.id,  {
+						type: "basic",
+						iconUrl: (src ? src : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
+						title: chrome.i18n.getMessage('status_unsafe'),
+						buttons: [
+							{ title: chrome.i18n.getMessage('action_deny') }
+						],
+						message: filename(delta.filename.current),
+					}, function() {});
+				});
+			}
+			
+		}
+
+	}
+
+
+	else if(delta.state) {
+
 		// Complete
 		if(delta.state.current == 'complete' && delta.state.previous == 'in_progress') {
 			
-		 	// Download failed
-			if(delta.bytesReceived < delta.fileSize) {
-				var title = 'Échec du téléchargement';
-				console.log(title);
-			}
-			
-			// Download complete
-			else if(options.enableNotificationOnComplete && !isPopupOpen) {
-				var title = 'Téléchargement terminé';
-				
-			}
-			
-			if(title) {
-				chrome.downloads.search({id:delta.id}, function(item) {
-					
-					chrome.downloads.getFileIcon(delta.id, {}, function (src) {
-						
-						
-						
-						chrome.notifications.create(NOTIFICATIONS_ID+item[0].id,  {
-							type: "basic",
-							eventTime: Date.now() + 1000,
-							iconUrl: (src ? src : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
-							title: title, 
-							message: item[0].filename,
-						}, function() {});
+			if(options.enableNotifications && !isPopupOpen) {
 
-					});
+				// Download failed
+				if(delta.bytesReceived < delta.fileSize) {
+					var title = chrome.i18n.getMessage('status_failed');
+					var button = chrome.i18n.getMessage('action_retry');
+				}
 
-				});	
+				// Download complete
+				else {
+					var title = chrome.i18n.getMessage('status_complete');
+					var button = chrome.i18n.getMessage('action_open')
+
+				}
+
+				if(title) {
+					chrome.downloads.search({id:delta.id}, function(item) {
+
+						chrome.downloads.getFileIcon(delta.id, {}, function(src) {
+
+							chrome.notifications.create(NOTIFICATIONS_ID+item[0].id,  {
+								type: "basic",
+								eventTime: Date.now() + 1000,
+								iconUrl: (src ? src : 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'),
+								title: title,
+								message: filename(item[0].filename),
+								buttons: [{ 
+									title: button
+								}]
+							}, function() {});
+
+						});
+
+					});	
+				}
+			
 			}
+
 		}
-		
+
 	}
 	
 	// Erase deleted files
-	else if(delta.exists && options.eraseDeletedFiles && !delta.exists.current && delta.exists.previous) {
+	else if(delta.exists && options.standaloneFileManagement && !delta.exists.current && delta.exists.previous) {
 		chrome.downloads.erase({id:delta.id});
 	}
 	
@@ -169,9 +210,55 @@ chrome.downloads.onChanged.addListener(function(delta) {
 		update();	
 });
 
+
 /**
- * Open file from notifications
+ * Notifications interactions
 **/
+chrome.notifications.onButtonClicked.addListener(function(nid, button) {
+	if(nid.substr(0,NOTIFICATIONS_ID.length) == NOTIFICATIONS_ID) {
+		
+		var id = parseInt(nid.substr(2, nid.length));
+		
+		chrome.downloads.search({ id:id }, function(item) {			
+			
+			if(item.length) {
+				
+				// Deny/accept download
+				if(item[0].danger != 'safe' && item[0].danger != 'accepted') {
+
+					chrome.notifications.clear(NOTIFICATIONS_ID+item[0].id, function() {
+						/*
+						if(button == 0)	{
+							setTimeout(function () {
+								chrome.downloads.acceptDanger(id);
+							}, 100);
+							chrome.downloads.acceptDanger(item[0].id);
+						}
+						else {
+						*/
+							chrome.downloads.cancel(item[0].id);
+							chrome.downloads.erase({id:item[0].id});
+						//}
+					});
+				}	
+
+				// Restart failed download
+				else if(item[0].bytesReceived < item[0].fileSize) {
+					chrome.downloads.erase({id:item[0].id}, function() {
+						chrome.downloads.download({url:item[0].url});
+					});	
+				}
+
+				// Open file
+				else if(item[0].state == 'complete')
+					chrome.downloads.open(item[0].id);
+			}
+			
+		});
+		
+	}
+});
+/*
 chrome.notifications.onClicked.addListener(function(nid) {
 	
 	if(nid.substr(0,NOTIFICATIONS_ID.length) == NOTIFICATIONS_ID) {
@@ -195,19 +282,20 @@ chrome.notifications.onClicked.addListener(function(nid) {
 	}
 	
 });
+*/
 
 /**
  * Icon draw
 **/
-function setDefaultIcon() { // default icon
+function setDefaultIcon(highlight) { // default icon
 		
 	icn.clearRect(0, 0, 38, 38);
 	
-	icn.strokeStyle = ICON_DEFAULT_COLOR;
-	icn.fillStyle = ICON_DEFAULT_COLOR;
+	icn.strokeStyle = (highlight ? ICON_HIGHLIGHT_COLOR : ICON_DEFAULT_COLOR);
+	icn.fillStyle = (highlight ? ICON_HIGHLIGHT_COLOR : ICON_DEFAULT_COLOR);
 	icn.lineWidth=10;
 	icn.beginPath();
-	icn.moveTo(19,3);
+	icn.moveTo(19,7);
 	icn.lineTo(19,22);
 	icn.stroke();
 
@@ -222,8 +310,8 @@ function setDefaultIcon() { // default icon
 	
 }
 
-function setProgressIcon(progress, paused) { // progression icon
-	
+function setProgressIcon(progress, paused, highlight) { // progression icon
+		
 	var w = progress * 38
 
 	icn.clearRect(0, 0, 38, 38);
@@ -235,8 +323,8 @@ function setProgressIcon(progress, paused) { // progression icon
 	icn.fillStyle = (paused ? ICON_PROGRESS_PAUSED_COLOR : ICON_PROGRESS_DEFAULT_COLOR);
 	icn.fillRect(0,28,w,12);
 
-	icn.strokeStyle = ICON_DEFAULT_COLOR;
-	icn.fillStyle = ICON_DEFAULT_COLOR;
+	icn.strokeStyle = (highlight ? ICON_HIGHLIGHT_COLOR : ICON_DEFAULT_COLOR);
+	icn.fillStyle = (highlight ? ICON_HIGHLIGHT_COLOR : ICON_DEFAULT_COLOR);
 	icn.lineWidth=10;
 	icn.beginPath();
 	icn.moveTo(20,0);

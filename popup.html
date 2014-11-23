@@ -74,13 +74,25 @@
 					
 					<div class="option-value">
 						<select name="maxItemsView" id="opt_maxItemsView">
-							<option value="0" i18n-name="option_listSizeUnlimited" i18n-method="text"></option>
 							<option value="5">5</option>
 							<option value="10">10</option>
 							<option value="15">15</option>
 							<option value="20">20</option>
-							<option value="1000">1000</option>
+							<option value="0" i18n-name="option_listSizeUnlimited" i18n-method="text"></option>
 						</select>
+					</div>
+				
+				</li>
+				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_enableNotifications" i18n-name="option_enableNotificationsLabel"></label>
+						<p i18n-name="option_enableNotificationsLegend"></p>
+					</div>
+					
+					<div class="option-value">
+						<input type="checkbox" name="enableNotifications" id="opt_enableNotifications">
 					</div>
 				
 				</li>
@@ -97,33 +109,7 @@
 					</div>
 				
 				</li>
-				
-				<li class="option">
-				
-					<div class="option-meta">
-						<label for="opt_enableNotificationOnComplete" i18n-name="option_enableNotificationOnCompleteLabel"></label>
-						<p i18n-name="option_enableNotificationOnCompleteLegend"></p>
-					</div>
-					
-					<div class="option-value">
-						<input type="checkbox" name="enableNotificationOnComplete" id="opt_enableNotificationOnComplete">
-					</div>
-				
-				</li>
-				
-				<li class="option">
-				
-					<div class="option-meta">
-						<label for="opt_disableDefaultView" i18n-name="option_disableDefaultViewLabel"></label>
-						<p i18n-name="option_disableDefaultViewLegend"></p>
-					</div>
-					
-					<div class="option-value">
-						<input type="checkbox" name="disableDefaultView" id="opt_disableDefaultView">
-					</div>
-				
-				</li>
-				
+
 				<li class="option">
 				
 					<div class="option-meta">
@@ -143,16 +129,29 @@
 				<li class="option">
 				
 					<div class="option-meta">
-						<label for="opt_eraseDeletedFiles" i18n-name="option_eraseDeletedFilesLabel"></label>
-						<p i18n-name="option_eraseDeletedFilesLegend"></p>
+						<label for="opt_standaloneFileManagement" i18n-name="option_standaloneFileManagementLabel"></label>
+						<p i18n-name="option_standaloneFileManagementLegend"></p>
 					</div>
 					
 					<div class="option-value">
-						<input type="checkbox" name="eraseDeletedFiles" id="opt_eraseDeletedFiles">
+						<input type="checkbox" name="standaloneFileManagement" id="opt_standaloneFileManagement">
 					</div>
 				
 				</li>
 				
+				<li class="option">
+				
+					<div class="option-meta">
+						<label for="opt_disableDefaultView" i18n-name="option_disableDefaultViewLabel"></label>
+						<p i18n-name="option_disableDefaultViewLegend"></p>
+					</div>
+					
+					<div class="option-value">
+						<input type="checkbox" name="disableDefaultView" id="opt_disableDefaultView">
+					</div>
+				
+				</li>
+
 			</ul>
 			
 		</div>

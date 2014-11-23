@@ -267,9 +267,8 @@ a {
 	border-bottom: 1px dotted #52B3FF;
 }
 
-.download-canceled .download-status, 
-.download-interrupted .download-status, 
-.download-removed .download-status {
+.download-danger .download-status, 
+.download-interrupted .download-status {
 	color: red;
 }
 

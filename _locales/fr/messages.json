@@ -1,16 +1,12 @@
 {
 	
-	"testitem": {
-		"message": "this is a testing translation"
-	},
-	
 	/* Globals of the extension */
 	"appName": {
 		"message": "Téléchargements",
 		"description": "Extension name"
 	},
 	"appDescription": {
-		"message": "Gérer vos téléchargements directement depuis n'importe quelle fenêtre sans accéder à la page dédiée de Chrome.",
+		"message": "Gérez vos téléchargements directement depuis n'importe quelle fenêtre sans accéder à la page dédiée de Chrome.",
 		"description": "Extension description"
 	},
 	
@@ -21,7 +17,7 @@
 		"description": "Name of the options button"
 	},
 	"cleanButtonName": {
-		"message": "Effacer la liste",
+		"message": "Effacer tout",
 		"description": "Name of the clean button"
 	},
 	
@@ -37,8 +33,12 @@
 	
 	/* Downloads status translation */
 	"status_complete": {
-		"message": "Terminé",
+		"message": "Téléchargement terminé",
 		"description": "Download complete"
+	},
+	"status_failed": {
+		"message": "Échec du téléchargement",
+		"description": "Download failed"
 	},
 	"status_in_progress": {
 		"message": "En cours",
@@ -56,10 +56,14 @@
 		"message": "Supprimé",
 		"description": "Download file deleted"
 	},
+	"status_unsafe": {
+		"message": "Fichier potentiellement dangereux",
+		"description": "Seems to be unsafe file"
+	},
 	
 	
 	/* Downloads actions translations */
-	"action_download": {
+	"action_redownload": {
 		"message": "Télécharger à nouveau",
 		"description": "Download again the deleted file"
 	},
@@ -79,6 +83,10 @@
 		"message": "Reprendre",
 		"description": "Continue the file downloading"
 	},
+	"action_open": {
+		"message": "Ouvrir le fichier",
+		"description": "Show where the downloaded file is"
+	},
 	"action_show": {
 		"message": "Montrer le fichier",
 		"description": "Show where the downloaded file is"
@@ -88,12 +96,22 @@
 		"description": "Cancel the download"
 	},
 	"action_erase": {
-		"message": "Retirer",
+		"message": "Effacer",
 		"description": "Delete the download from the list"
 	},
 	"action_delete": {
 		"message": "Supprimer",
 		"description": "Delete the download from the list and the file"
+	},
+	
+	"action_accept": {
+		"message": "Accepter",
+		"description": "Download the unsafe file"
+	},
+	
+	"action_deny": {
+		"message": "Annuler le téléchargement",
+		"description": "Do not download the unsafe file"
 	},
 	
 	/* Options translations */
@@ -118,11 +136,11 @@
 	},
 	
 	// Enable notifications on complete
-	"option_enableNotificationOnCompleteLabel": {
-		"message": "Effacer seulement les téléchargements visibles"
+	"option_enableNotificationsLabel": {
+		"message": "Autoriser les notifications"
 	},
-	"option_enableNotificationOnCompleteLEgend": {
-		"message": "Afficher une notification pour prévenir la fin du téléchargement si cette fenêtre est fermée."
+	"option_enableNotificationsLEgend": {
+		"message": "Affiche des notifications lorsqu'une action de votre part est requise, qu'un téléchargement a été interrompu, ou qu'il soit terminé."
 	},
 	
 	// Disable default view
@@ -141,18 +159,18 @@
 		"message": "Action a effectuer lors du retrait d'un téléchargement."
 	},
 	"option_removeDownloadActionErase": {
-		"message": "Retirer de la liste"
+		"message": "Effacer de la liste"
 	},
 	"option_removeDownloadActionDelete": {
 		"message": "Supprimer le fichier"
 	},
 	
 	// Erase deleted files
-	"option_eraseDeletedFilesLabel": {
-		"message": "Retirer les fichiers supprimés"
+	"option_standaloneFileManagementLabel": {
+		"message": "Gestion autonome des téléchargements"
 	},
-	"option_eraseDeletedFilesLegend": {
-		"message": "Effacer les fichiers supprimés de la liste des téléchargements."
+	"option_standaloneFileManagementLegend": {
+		"message": "Efface les fichiers supprimés de la liste de téléchargements."
 	}
 
 }

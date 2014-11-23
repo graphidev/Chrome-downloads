@@ -147,18 +147,28 @@ function updateItemView(view, item) {
 	if(!item.exists) {
 		view.classList.add('download-deleted');
 		view.querySelector('.download-status').innerHTML = chrome.i18n.getMessage('status_deleted')
-		actions.push('download', 'erase');
+		actions.push('redownload', 'erase');
 	}
-	
+		
 	else if(item.state == 'in_progress') {
 		
 		var status = byte_format(item.bytesReceived)+'/'+byte_format(item.fileSize);
 		
-		if(item.paused) {
+		// Danger download
+		if(item.danger != 'safe' && item.danger != 'accepted') {
+			view.classList.add('download-danger');
+			view.querySelector('.download-status').innerHTML = '<span>'+chrome.i18n.getMessage('status_unsafe')+'</span>';
+		 	actions.push('accept', 'cancel');
+		}
+		
+		// Paused download
+		else if(item.paused) {
 			view.classList.add('download-paused');
 			view.querySelector('.download-status').innerHTML = status + ' - <span>'+chrome.i18n.getMessage('status_paused')+'</span>';
 			if(item.canResume) actions.push('resume','cancel');
 		}
+		
+		// In progress download
 		else {
 			
 			view.classList.add('download-'+item.state);
@@ -328,16 +338,16 @@ window.addEventListener("DOMContentLoaded", function () {
 	downloadsList.addEventListener('click', function(e) {
 		
 		var download = getClosestItem(e.target);
-		if(download != downloadsList) {
+		if(download != downloadsList && download instanceof HTMLElement) {
 			
 			var id = parseInt(download.getAttribute('data-item'));
 						
 			if(e.target.hasAttribute('data-action')) {
 				var action = e.target.getAttribute('data-action');
 				
-				if(/resume|cancel|pause|retry|download|erase|delete|show/.test(action)) {
-					
-					if(action == 'download' || action == 'retry') { // Restart download
+				if(/accept|resume|cancel|pause|retry|redownload|erase|delete|show/.test(action)) {
+
+					if(action == 'redownload' || action == 'retry') { // Restart download
 						chrome.downloads.search({id:id}, function(item) {
 							if(!item.length) {
 								download.parentNode.removeChild(download);
@@ -345,9 +355,16 @@ window.addEventListener("DOMContentLoaded", function () {
 							}
 							
 							item = item[0];
-							chrome.downloads.download({url:item.url});
-							chrome.downloads.erase({id:item.id});
+							chrome.downloads.erase({id:item.id}, function() {
+								chrome.downloads.download({url:item.url});	
+							});
 					  	});
+					}
+					
+					else if(action == 'accept') {
+						setTimeout(function () {
+							chrome.downloads.acceptDanger(id);
+						}, 100);
 					}
 					
 					else if(action == 'delete') {
@@ -362,6 +379,13 @@ window.addEventListener("DOMContentLoaded", function () {
 					
 					else {
 						chrome.downloads[action](id);
+						
+						if(action == 'cancel') {
+							chrome.downloads.search({id:id}, function(item) {
+								if(item[0].danger != 'safe' && item[0].danger != 'accepted')
+									chrome.downloads.erase({id:item[0].id});
+							});
+						}
 					}	
 
 					return;
@@ -388,7 +412,7 @@ window.addEventListener("DOMContentLoaded", function () {
 	// Options management
 	var optionsFields = document.querySelectorAll('.options-list input[type="checkbox"], .options-list select');
 	for(opt in optionsFields) {
-		if(opt != 'length') {
+		if(optionsFields[opt] instanceof HTMLElement) {
 			
 			if(optionsFields[opt].hasAttribute('type') && optionsFields[opt].getAttribute('type') == 'checkbox') {
 				optionsFields[opt].checked = bg.options[optionsFields[opt].name];
