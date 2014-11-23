@@ -72,6 +72,11 @@ function update() {
 			
 			items.forEach(function (e) {
 				
+				// Erase deleted files
+				if(!e.exists && options.standaloneFileManagement) {
+					chrome.downloads.erase({id:e.id});	
+				}
+				
 				if(e.danger != 'safe' && e.danger != 'accepted'/*!'/safe|accepted/'.test(e.danger)*/) { 
 					warning = true;	
 				}
